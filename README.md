@@ -1,24 +1,29 @@
-# Puissance_4_Prolog
+# Puissance 4 - Prolog
 
-## heuristiques
+This project is a **Connect 4** game (also known as **Puissance 4**) implemented in **Prolog**. The game involves two players trying to connect four of their pieces in a row, either horizontally, vertically, or diagonally, on a 6x7 grid.
 
-Valeur de retour :
-- `-1000` : sûr à 100% de perdre pour le 1er joueur (`'x'`)
-- `-100` : grandes chances de perdre pour le 1er joueur (`'x'`)
-- `1000` : sûr à 100% de gagner pour le 1er joueur (`'x'`)
-- `100` : grandes chances de gagner pour le 1er joueur (`'x'`)
-- `0` : position neutre
+## Heuristic Functions
 
-##### h0
+The game uses different heuristic functions to evaluate the state of the game board and help determine the best move for the first player (`'x'`). The heuristic values return a score for a given board position, guiding the AI in making decisions.
 
-- aléatoire
+### Return Values:
+- `-1000` : The first player (`'x'`) is certain to lose.
+- `-100` : The first player (`'x'`) has a high chance of losing.
+- `1000` : The first player (`'x'`) is certain to win.
+- `100` : The first player (`'x'`) has a high chance of winning.
+- `0` : Neutral position (no clear advantage).
 
-##### h1
+### Heuristic Functions:
 
-- Le score du joueur est dépend de la façon dont il est centré en colonnes dans le tableau. Il est compris entre 0 et 96
-- la valeur heuristique est le score de x - le score de o. Elle est comprise entre 96 et -96.
-- est supérieure à 0 si x est plus centré que o.
-- est inférieure à 0 si x est moins centré que o.
+#### h0: Random
+- The evaluation is random.
+
+#### h1: Column Centering
+- The score for the player depends on how centered the pieces are within the columns of the board.
+- The score ranges from `0` to `96`, and the heuristic value is calculated as the difference between the score of `'x'` and the score of `'o'`. The result is between `96` and `-96`.
+- The heuristic is greater than 0 if `'x'` is more centered than `'o'`.
+- The heuristic is less than 0 if `'x'` is less centered than `'o'`.
+
 ```
 1 2 3 4 3 2 1
 1 2 3 4 3 2 1
@@ -28,12 +33,11 @@ Valeur de retour :
 1 2 3 4 3 2 1
 ```
 
-##### h2
+#### h2: Opponent’s Centering
+- The score for the player is based on how centered their opponent’s pieces are in both columns and rows. The value ranges from `0` to `-45`, and the heuristic value is calculated as the difference between the score of `'x'` and the score of `'o'`. The result is between `45` and `-45`.
+- The heuristic is greater than 0 if `'x'` is less blocked than `'o'` (i.e., in a better position).
+- The heuristic is less than 0 if `'x'` is more blocked than `'o'` (i.e., in a worse position).
 
-- Le score du joueur dépend de la façon dont son opposant est centré en colonnes et en ligne dans le tableau. Il est compris entre 0 et - La valeur heuristique est le score de x - le score de o. Elle est comprise entre 45 et -45.
-- est supérieure à 0 si x est moins gêné que o (donc en meilleure position).
-- est inférieure à 0 si x est plus gêné que o (donc en moins bonne position).
-    
 ```
 0 1 2 3 2 1 0
 1 2 3 4 3 2 1
@@ -43,26 +47,32 @@ Valeur de retour :
 0 1 2 3 2 1 0
 ```
 
-##### h3
+#### h3: Three-in-a-Row Count
+- The score for the player is determined by the number of three consecutive pieces they have on each row and column. The score ranges from `0` to `57`.
+- The score is incremented by +3 for each new "line of 3" detected on a row or column.
+- The heuristic value is calculated as the difference between the score of `'x'` and the score of `'o'`. The result is between `57` and `-57`.
+- The heuristic is greater than 0 if `'x'` has more lines of 3 than `'o'`.
+- The heuristic is less than 0 if `'o'` has more lines of 3 than `'x'`.
 
-- Le score du joueur est le nombre de série de 3 pions succesifs qu'il a, sur chaque colonne et chaque ligne. Il est compris entre 0 et 57
-- Le score d'un joueur est incrémenté de +3 à chaque fois qu'une nouvelle "ligne de 3" est détectée sur une ligne ou une colonne.
-- La valeur heuristique est le score de x - le score de o. Elle est comprise entre 57 et - 57.
-- est supérieure à 0 si x a plus de lignes de 3 que o.
-- est inférieure à 0 si o a plus de lignes de 3 que x.
+#### h4: Three-in-a-Row with Gaps
+- Counts the number of "three-in-a-row" sequences where there is one empty space before or after the three connected pieces.
+- (This differs from counting a "Connect 4" in one move.)
 
-##### h4
+#### h5: Isolated Pieces
+- The score for the player is related to the number of isolated pieces they have on the board. The score ranges from `0` to `42`.
+- The heuristic value is calculated as the difference between the score of `'o'` and the score of `'x'`. The result is between `42` and `-42`.
+- The heuristic is greater than 0 if `'x'` has fewer isolated pieces than `'o'`.
+- The heuristic is less than 0 if `'o'` has fewer isolated pieces than `'x'`.
 
-- compte le nombre de 3 alignés avec 1 vide avant ou après
-(différent du nb de puissance 4 en 1 coup)
+#### h6: Potential Power-4 Zones (Not Implemented)
+- This heuristic counts the number of zones where a **Connect 4** is possible with 0, 1, 2, or 3 pieces already in place.
+- (This function is explained in the presentation but was not implemented due to time constraints.)
 
-##### h5
+## How to Run the Game
 
-- Le score du joueur est en relation aux nombres de pion "isolés" qu'il a sur le terrain. Le score compris entre 0 et 42.
-- La valeur heuristique est le score de o - le score de x. Est comprise entre 42 et - 42.
-- est supérieure à 0 si x a moins de "pion" isolé que o.
-- est inférieure à 0 si o a moins de "pion" isolé que x.
+1. Clone or download the repository.
+2. Load the Prolog file containing the game logic.
+3. Run the game by starting the Prolog interpreter and calling the relevant predicates to start a game session.
 
-##### h6 (non implementée par dysfonctionnement et manque de temps, mais explicitée dans la présentation)
-
-- compte le nombre de zones avec un puissance 4 possible avec 0,1,2 ou 3 piece dedans
+## Requirements
+- **Prolog** (e.g., SWI-Prolog)
